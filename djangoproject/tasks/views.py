@@ -1,10 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
+from .models import Location, Accommodation  # Use Location instead of Task
+from .serializers import LocationSerializer, AccommodationSerializer  # Import the new Location serializer
 
-from .models import Task
-from .serializers import TaskSerializer
+class LocationAPI(ModelViewSet):
+    serializer_class = LocationSerializer
+    queryset = Location.objects.all()
 
-
-class TasksAPI(ModelViewSet):
-    serializer_class = TaskSerializer
-    queryset = Task.objects.all()
-    
+class AccommodationAPI(ModelViewSet):
+    queryset = Accommodation.objects.all()
+    serializer_class = AccommodationSerializer

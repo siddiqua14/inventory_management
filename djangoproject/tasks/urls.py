@@ -1,6 +1,7 @@
 from rest_framework.routers import DefaultRouter
-from .views import TasksAPI
+from .views import LocationAPI, AccommodationAPI
 
 router = DefaultRouter()
-router.register("tasks", TasksAPI, basename="tasks")
+router.register("locations", LocationAPI, basename="locations")
+router.register("accommodations", AccommodationAPI, basename="accommodation")
 urlpatterns = router.urls
