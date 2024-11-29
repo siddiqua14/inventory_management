@@ -26,7 +26,8 @@ SECRET_KEY = "django-insecure-=g8xt@(u*47rc&&4cmqsmh705k6=5*$tw_6#i-_ah)k5ixau94
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
 
 
 # Application definition
@@ -38,8 +39,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app",
+    #local apps
+    "tasks",
+
+    # third-party apps
     "rest_framework",
+    'django.contrib.gis',
+
 ]
 
 MIDDLEWARE = [
@@ -78,11 +84,11 @@ WSGI_APPLICATION = "djangoproject.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_DRIVER', 'django.db.backends.postgresql'),
+        "ENGINE": "django.contrib.gis.db.backends.postgis", 
         'NAME': os.environ.get('PG_DB', 'postgres'),
         'USER': os.environ.get('PG_USER', 'postgres'),
         'PASSWORD': os.environ.get('PG_PASSWORD', 'postgres'),
-        'HOST': os.environ.get('PG_HOST', 'localhost'),
+        'HOST': os.environ.get('PG_HOST', 'db'),
         'PORT': os.environ.get('PG_PORT', '5432'),
     }
 }

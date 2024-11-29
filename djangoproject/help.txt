@@ -1,0 +1,10 @@
+Ensure you've run Django migrations:
+
+docker exec -it djangoproject-web-1 python manage.py makemigrations
+docker exec -it djangoproject-web-1 python manage.py migrate
+
+--admin/user
+docker exec -it djangoproject-web-1 python manage.py createsuperuser
+    admin
+    admin@gmail.com
+    123

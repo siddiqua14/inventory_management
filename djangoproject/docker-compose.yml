@@ -1,21 +1,24 @@
 
 services:
-  app:
-    container_name: app
+  web:
     build: .
     ports:
       - "8000:8000"
+    command: ["sh", "./start.sh"]
+    volumes:
+      - .:/app
     environment:
       - PG_USER=postgres
       - PG_PASSWORD=postgres
       - PG_DB=postgres
       - PG_HOST=db
       - PG_PORT=5432
+      - ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1
     depends_on:
       - db
   db:
     container_name: db
-    image: postgres:15
+    image: postgis/postgis:latest  # Use PostGIS image instead of regular postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -24,6 +27,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
 
 volumes:
   pgdata: {}
