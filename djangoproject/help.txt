@@ -1,3 +1,10 @@
+docker-compose down -v
+then build
+then 
+pip install django
+pip install djangorestframework
+
+docker exec -it djangoproject-web-1 bash
 Ensure you've run Django migrations:
 
 docker exec -it djangoproject-web-1 python manage.py makemigrations

@@ -57,3 +57,13 @@ class Accommodation(models.Model):
 
     def __str__(self):
         return self.title
+    
+class LocalizeAccommodation(models.Model):
+    id = models.AutoField(primary_key=True)  # Auto incrementing primary key
+    property = models.ForeignKey(Accommodation, on_delete=models.CASCADE, related_name='localizations')
+    language = models.CharField(max_length=2)  # Language code (e.g., "en" for English, "fr" for French)
+    description = models.TextField()  # Localized description
+    policy = models.JSONField()  # Store policy in JSONB format, e.g., {"pet_policy": "value"}
+
+    def __str__(self):
+        return f"{self.language} localization for {self.property.title}"

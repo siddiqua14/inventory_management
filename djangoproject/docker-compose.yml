@@ -5,6 +5,7 @@ services:
     ports:
       - "8000:8000"
     command: ["sh", "./start.sh"]
+    #command: ["sh", "-c", "./wait-for-it.sh db:5432 -- sh ./start.sh"]
     volumes:
       - .:/app
     environment:
