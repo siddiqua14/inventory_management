@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # third-party apps
     "rest_framework",
     'django.contrib.gis',
+    'leaflet',
 
 ]
 
@@ -91,6 +92,14 @@ DATABASES = {
         'HOST': os.environ.get('PG_HOST', 'db'),
         'PORT': os.environ.get('PG_PORT', '5432'),
     }
+}
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (0, 0),  # Center map on India by default
+    'DEFAULT_ZOOM': 2,
+    'MIN_ZOOM': 1,
+    'MAX_ZOOM': 18,
+    'TILES': 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    'ATTRIBUTION_PREFIX': 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
 }
 
 

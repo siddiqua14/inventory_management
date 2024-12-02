@@ -7,4 +7,3 @@ pytz
 sqlparse
 typing_extensions
 tzdata
-django-geos

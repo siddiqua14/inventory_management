@@ -2,11 +2,10 @@ from django.contrib import admin
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.admin import UserAdmin
 from .models import Location, Accommodation, LocalizeAccommodation
+from leaflet.admin import LeafletGeoAdmin
 
-
-# Registering Models in Admin Interface
 @admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(LeafletGeoAdmin):
     list_display = (
         "id",
         "title",
@@ -18,9 +17,16 @@ class LocationAdmin(admin.ModelAdmin):
     list_filter = ("location_type", "country_code")
     search_fields = ("title", "city", "state_abbr", "country_code")
 
+    # Leaflet map customization options
+    default_zoom = 12  # Set the default zoom level for the map
+    map_options = {
+        'scrollWheelZoom': False,  # Disable scroll wheel zoom for better UI
+        'center': [0, 0],  # You can set a default center (lat, long), for example [0, 0]
+        'zoom': 12,  # Set the initial zoom level for the map
+    }
 
 @admin.register(Accommodation)
-class AccommodationAdmin(admin.ModelAdmin):
+class AccommodationAdmin(LeafletGeoAdmin):
     list_display = (
         "id",
         "title",
@@ -47,6 +53,13 @@ class AccommodationAdmin(admin.ModelAdmin):
             return queryset.filter(user=request.user)  # Filter for Property Owners
         return queryset  # Return all accommodations for admin users
 
+    # Leaflet map customization options
+    default_zoom = 12  # Set the default zoom level for the map
+    map_options = {
+        'scrollWheelZoom': False,  # Disable scroll wheel zoom for better UI
+        'center': [0, 0],  # You can set a default center (lat, long), for example [0, 0]
+        'zoom': 12,  # Set the initial zoom level for the map
+    }
 
 @admin.register(LocalizeAccommodation)
 class LocalizeAccommodationAdmin(admin.ModelAdmin):

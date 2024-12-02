@@ -3,6 +3,7 @@ from django.contrib.gis.db import models as gis_models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
+
 class Location(models.Model):
     LOCATION_TYPES = [
         ('continent', 'Continent'),
