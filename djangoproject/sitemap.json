@@ -1,0 +1,32 @@
+[
+  {
+    "India": "in",
+    "locations": [
+      {
+        "Maharashtra": "in/mh",
+        "locations": [
+          {
+            "Mumbai": "in/mh/mum"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "United States": "us",
+    "locations": [
+      {
+        "California": "us/ca",
+        "locations": [
+          {
+            "Los Angeles": "us/ca/la"
+          }
+        ]
+      },
+      {
+        "New York City": "us/ny",
+        "locations": []
+      }
+    ]
+  }
+]

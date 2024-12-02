@@ -1,0 +1,10 @@
+asgiref
+Django
+django-leaflet
+djangorestframework
+psycopg2-binary
+pytz
+sqlparse
+typing_extensions
+tzdata
+django-geos
