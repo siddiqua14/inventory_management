@@ -1,9 +1,16 @@
 asgiref
+coverage
 Django
+django-leaflet
 djangorestframework
+iniconfig
+packaging
+pluggy
 psycopg2-binary
+pytest
+pytest-cov
+pytest-django
 pytz
 sqlparse
 typing_extensions
 tzdata
-django-leaflet

@@ -10,7 +10,7 @@ from .serializers import AccommodationSerializer, LocationSerializer
 from rest_framework import status
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
-from django.http import HttpResponse
+from rest_framework.exceptions import NotAuthenticated
 
 class LocationAPI(ModelViewSet):
     serializer_class = LocationSerializer
@@ -26,6 +26,10 @@ class AccommodationAPI(ModelViewSet):
         if self.request.user.groups.filter(name="Property Owners").exists():
             return Accommodation.objects.filter(user=self.request.user)
         return super().get_queryset()
+    def permission_denied(self, request, message=None, code=None):
+        if not request.user.is_authenticated:
+            raise NotAuthenticated(detail="Authentication credentials were not provided.")
+        super().permission_denied(request, message=message, code=code)
 
 
 # Modify SignupRequestView to inherit TemplateView for rendering the template
