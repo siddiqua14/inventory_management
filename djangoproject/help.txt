@@ -15,3 +15,8 @@ docker exec -it djangoproject-web-1 python manage.py createsuperuser
     admin
     admin@gmail.com
     123
+
+python manage.py test
+coverage run manage.py test
+coverage report
+coverage html

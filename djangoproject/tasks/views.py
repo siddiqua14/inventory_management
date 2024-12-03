@@ -1,16 +1,14 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from django.views.generic import TemplateView  # Import TemplateView
 from .models import Accommodation, Location
 from .serializers import AccommodationSerializer, LocationSerializer
-from rest_framework import status
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth.password_validation import validate_password
 from rest_framework.exceptions import NotAuthenticated
+from django.contrib import messages
 
 class LocationAPI(ModelViewSet):
     serializer_class = LocationSerializer
@@ -26,46 +24,51 @@ class AccommodationAPI(ModelViewSet):
         if self.request.user.groups.filter(name="Property Owners").exists():
             return Accommodation.objects.filter(user=self.request.user)
         return super().get_queryset()
+
     def permission_denied(self, request, message=None, code=None):
         if not request.user.is_authenticated:
-            raise NotAuthenticated(detail="Authentication credentials were not provided.")
+            raise NotAuthenticated(
+                detail="Authentication credentials were not provided."
+            )
         super().permission_denied(request, message=message, code=code)
 
 
-# Modify SignupRequestView to inherit TemplateView for rendering the template
 class SignupRequestView(TemplateView):
-    template_name = "tasks/signup.html"  # Template for the signup page
+    template_name = "tasks/signup.html"
 
     def post(self, request, *args, **kwargs):
-        # Handle the signup form submission
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
         group_name = "Property Owners"
 
         if not username or not email or not password:
-            return Response({"error": "Missing fields"}, status=status.HTTP_400_BAD_REQUEST)
+            messages.error(request, "All fields are required.")
+            return render(request, self.template_name)
 
-        # Create the user
-        user = User.objects.create_user(username=username, email=email, password=password)
-        user.is_active = False  # Set inactive initially for admin approval
+        if len(password) < 8:
+            messages.error(request, "Password must be at least 8 characters long.")
+            return render(request, self.template_name)
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+            return render(request, self.template_name)
+
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email is already registered.")
+            return render(request, self.template_name)
+
+        user = User.objects.create_user(
+            username=username, email=email, password=password
+        )
+        user.is_active = False
         user.save()
 
-        # Create or get the "Property Owners" group
         group, created = Group.objects.get_or_create(name=group_name)
         user.groups.add(group)
 
-        # Redirect to a different page (e.g., login page) after successful signup
-        return redirect('/admin/login/')  # Assuming 'login' is a named URL pattern for the login page
+        messages.success(request, "Signup successful! Please wait for admin approval.")
+        return redirect("/admin/login/")  # Redirect to login page
 
-def custom_login_view(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')  # Redirect to some page after login
-    else:
-        form = AuthenticationForm()
-    
-    return render(request, 'tasks/login.html', {'form': form})
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)  # Ensure no lingering messages

@@ -6,7 +6,7 @@
         "Maharashtra": "in/mh",
         "locations": [
           {
-            "Mumbai": "in/mh/mum"
+            "Mumbai": "in/mh/mumbai"
           }
         ]
       }
@@ -19,12 +19,21 @@
         "California": "us/ca",
         "locations": [
           {
-            "Los Angeles": "us/ca/la"
+            "Los Angeles": "us/ca/los angeles"
           }
         ]
       },
       {
         "New York City": "us/ny",
+        "locations": []
+      }
+    ]
+  },
+  {
+    "France": "fr",
+    "locations": [
+      {
+        "Paris": "fr/paris",
         "locations": []
       }
     ]

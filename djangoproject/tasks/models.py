@@ -41,7 +41,7 @@ class Location(models.Model):
 
 class Accommodation(models.Model):
     id = models.CharField(max_length=20, primary_key=True)
-    feed = models.PositiveSmallIntegerField(default=0)
+    feed = models.PositiveSmallIntegerField(default=0)  # Partition by this field
     title = models.CharField(max_length=100, null=False, blank=False)
     country_code = models.CharField(max_length=2, null=False, blank=False)
     bedroom_count = models.PositiveIntegerField(null=True, blank=True)

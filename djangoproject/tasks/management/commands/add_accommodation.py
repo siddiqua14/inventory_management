@@ -51,6 +51,7 @@ class Command(BaseCommand):
             usd_rate=100.00,
             center=Point(72.8777, 19.0760),
             location=india,
+            images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["WiFi", "Air Conditioning", "Hot Water"],
             user=user,
             published=True
@@ -66,6 +67,7 @@ class Command(BaseCommand):
             usd_rate=250.00,
             center=Point(-118.2437, 34.0522),
             location=us,
+            images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["Pool", "Gym", "Parking"],
             user=user,
             published=True
@@ -81,6 +83,7 @@ class Command(BaseCommand):
             usd_rate=300.00,
             center=Point(-74.0060, 40.7128),
             location=us,
+            images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["WiFi", "Heating", "Washer"],
             user=user,
             published=True
@@ -96,6 +99,7 @@ class Command(BaseCommand):
             usd_rate=150.00,
             center=Point(2.3522, 48.8566),
             location=france,
+            images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["WiFi", "Elevator", "Balcony"],
             user=user,
             published=True

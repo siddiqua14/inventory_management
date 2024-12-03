@@ -54,12 +54,29 @@ class AccommodationAdmin(LeafletGeoAdmin):
         return queryset  # Return all accommodations for admin users
 
     # Leaflet map customization options
-    default_zoom = 12  # Set the default zoom level for the map
+    default_zoom = 12
     map_options = {
-        'scrollWheelZoom': False,  # Disable scroll wheel zoom for better UI
-        'center': [0, 0],  # You can set a default center (lat, long), for example [0, 0]
-        'zoom': 12,  # Set the initial zoom level for the map
+        'scrollWheelZoom': False,
+        'center': [0, 0],
+        'zoom': 12,
     }
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if not request.user.is_superuser:
+            form.base_fields['user'].widget.attrs['disabled'] = 'disabled'
+            form.base_fields['user'].required = False
+        return form
+
+    def save_model(self, request, obj, form, change):
+        # Auto-update the country code based on the location
+        location = obj.location
+
+        if location and location.country_code:
+            obj.country_code = location.country_code
+
+        super().save_model(request, obj, form, change)
+
 
 @admin.register(LocalizeAccommodation)
 class LocalizeAccommodationAdmin(admin.ModelAdmin):
