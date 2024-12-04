@@ -47,6 +47,6 @@ You can create a virtual environment to isolate project dependencies:
 
     Install the necessary dependencies listed in `requirements.txt` by running the following command:
 
-    ```bash
+
     pip install -r requirements.txt
-    ```
+    
