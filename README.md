@@ -35,7 +35,6 @@ First, clone the project repository to your local machine:
     cd inventory-management
     ```
 ### 2. Create a Virtual Environment (Optional)
-
 You can create a virtual environment to isolate project dependencies:
 
     ```bash
@@ -45,8 +44,8 @@ You can create a virtual environment to isolate project dependencies:
     ```
 ### 3. Install Dependencies
 
-    Install the necessary dependencies listed in `requirements.txt` by running the following command:
+Install the necessary dependencies listed in `requirements.txt` by running the following command:
 
-
+    ```bash
     pip install -r requirements.txt
-    
+    ```
