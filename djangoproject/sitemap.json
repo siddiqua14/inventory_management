@@ -1,40 +1,74 @@
 [
   {
-    "India": "in",
+    "title": "Bangladesh",
+    "slug": "bangladesh",
     "locations": [
       {
-        "Maharashtra": "in/mh",
+        "title": "Dhaka",
+        "slug": "dhaka",
+        "url": "bd/dhaka"
+      }
+    ]
+  },
+  {
+    "title": "Japan",
+    "slug": "japan",
+    "locations": [
+      {
+        "title": "Tokyo",
+        "slug": "tokyo",
+        "url": "jp/tokyo"
+      }
+    ]
+  },
+  {
+    "title": "France",
+    "slug": "france",
+    "locations": []
+  },
+  {
+    "title": "Nepal",
+    "slug": "nepal",
+    "locations": []
+  },
+  {
+    "title": "Thailand",
+    "slug": "thailand",
+    "locations": []
+  },
+  {
+    "title": "India",
+    "slug": "india",
+    "locations": [
+      {
+        "title": "Maharashtra",
+        "slug": "maharashtra",
+        "url": "in/maharashtra",
         "locations": [
           {
-            "Mumbai": "in/mh/mumbai"
+            "title": "Mumbai",
+            "slug": "mumbai",
+            "url": "in/maharashtra/mumbai"
           }
         ]
       }
     ]
   },
   {
-    "United States": "us",
+    "title": "United States",
+    "slug": "united-states",
     "locations": [
       {
-        "California": "us/ca",
+        "title": "California",
+        "slug": "california",
+        "url": "us/california",
         "locations": [
           {
-            "Los Angeles": "us/ca/los angeles"
+            "title": "Los Angeles",
+            "slug": "los-angeles",
+            "url": "us/california/los-angeles"
           }
         ]
-      },
-      {
-        "New York City": "us/ny",
-        "locations": []
-      }
-    ]
-  },
-  {
-    "France": "fr",
-    "locations": [
-      {
-        "Paris": "fr/paris",
-        "locations": []
       }
     ]
   }

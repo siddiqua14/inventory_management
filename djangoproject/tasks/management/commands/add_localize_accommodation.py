@@ -1,43 +1,58 @@
 from django.core.management.base import BaseCommand
 from django.contrib.gis.geos import Point
-from tasks.models import Accommodation, Location, LocalizeAccommodation
+from tasks.models import Location, Accommodation, LocalizeAccommodation
 from django.contrib.auth.models import User
 
+
 class Command(BaseCommand):
-    help = 'Add localizations for accommodations'
+    help = "Add localizations for accommodations"
 
     def handle(self, *args, **kwargs):
-        # Fetch or create Accommodation
-        accommodation, created = Accommodation.objects.get_or_create(
-            id="USA-Hotel-01",  # Example accommodation ID
-            defaults={
-                'title': "Grand Hotel California",
-                'country_code': "US",
-                'bedroom_count': 5,
-                'review_score': 4.5,
-                'usd_rate': 250.00,
-                'center': Point(-118.2500, 34.0500),
-                'published': True,
-                'location': Location.objects.get(id="CA"),  # Ensure Location is imported
-                'images': ["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
-                'amenities': ["Wi-Fi", "Air conditioning", "Pool", "Gym"]
-            }
-        )
+        # Fetch Accommodation entries (you can adjust the logic to fetch specific ones)
+        accommodations = Accommodation.objects.all()
 
-        # Example 1: Add English Localization
-        LocalizeAccommodation.objects.create(
+        if not accommodations:
+            self.stdout.write(
+                self.style.ERROR("No accommodations found in the database")
+            )
+            return
+
+        # Loop through accommodations and create localizations
+        for accommodation in accommodations:
+            # Example: Add English localization
+            self.add_localization(
+                accommodation,
+                "en",
+                "The Grand Hotel California offers a luxurious stay in the heart of California.",
+                {"pet_policy": "Pets are not allowed."},
+            )
+
+            # Example: Add French localization
+            self.add_localization(
+                accommodation,
+                "fr",
+                "L'hôtel Grand California offre un séjour luxueux au cœur de la Californie.",
+                {"pet_policy": "Les animaux ne sont pas autorisés."},
+            )
+
+        self.stdout.write(self.style.SUCCESS("Successfully added localizations"))
+
+    def add_localization(self, accommodation, language, description, policy):
+        # Check if localization exists; if not, create it
+        localization, created = LocalizeAccommodation.objects.get_or_create(
             property=accommodation,
-            language="en",  # English language
-            description="The Grand Hotel California offers a luxurious stay in the heart of California.",
-            policy={"pet_policy": "Pets are not allowed."},
+            language=language,
+            defaults={"description": description, "policy": policy},
         )
-
-        # Example 2: Add French Localization
-        LocalizeAccommodation.objects.create(
-            property=accommodation,
-            language="fr",  # French language
-            description="L'hôtel Grand California offre un séjour luxueux au cœur de la Californie.",
-            policy={"pet_policy": "Les animaux ne sont pas autorisés."},
-        )
-
-        self.stdout.write(self.style.SUCCESS('Successfully added localizations'))
+        if created:
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"Localization added for {accommodation.title} in {language}"
+                )
+            )
+        else:
+            self.stdout.write(
+                self.style.WARNING(
+                    f"Localization for {accommodation.title} in {language} already exists"
+                )
+            )

@@ -3,6 +3,10 @@ from django.contrib.auth.models import User, Group
 from django.urls import reverse
 from tasks.models import Accommodation, Location, LocalizeAccommodation
 from django.contrib.gis.geos import Point
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
+from datetime import datetime
+
 
 class LocationModelTest(TestCase):
     def setUp(self):
@@ -71,22 +75,88 @@ class SignupRequestViewTest(TestCase):
 
 class AccommodationAPITest(TestCase):
     def setUp(self):
-        self.client = Client()
+        self.client = APIClient()
         self.user = User.objects.create_user(username="apiuser", password="password")
         self.group = Group.objects.create(name="Property Owners")
         self.user.groups.add(self.group)
+        self.user.is_active = False  # Set the user as inactive initially
+        self.user.save()
+
+        # Create Location and Accommodation
+        self.location = Location.objects.create(
+            id="loc1",
+            title="Test City",
+            location_type="city",
+            country_code="US",
+            state_abbr="CA",
+            city="Test City",
+            center="POINT(-118.2437 34.0522)",
+        )
+        self.accommodation = Accommodation.objects.create(
+            id="acc1",
+            title="Test Accommodation",
+            country_code="US",
+            bedroom_count=2,
+            review_score=4.5,
+            usd_rate=100.00,
+            center="POINT(-118.2437 34.0522)",
+            location=self.location,
+            user=self.user,
+        )
+
+        # Create another user (Property Owner) with unique username
+        other_username = f"otheruser_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        self.other_user = User.objects.create_user(
+            username=other_username, password="password"
+        )
+        self.other_user.groups.add(self.group)
+        self.other_user.is_active = True
+        self.other_user.save()
+
+        # Create an accommodation for the second user
+        self.other_accommodation = Accommodation.objects.create(
+            id="acc2",
+            title="Other Accommodation",
+            country_code="US",
+            bedroom_count=1,
+            review_score=3.0,
+            usd_rate=80.00,
+            center="POINT(-118.2437 34.0522)",
+            location=self.location,
+            user=self.other_user,
+        )
+
+    def tearDown(self):
+        # Clean up by deleting the users created in the tests
+        User.objects.filter(username="apiuser").delete()
+        User.objects.filter(username=self.other_user.username).delete()
 
     def test_authenticated_user_can_access_accommodations(self):
+        self.user.is_active = True  # Activate the user for testing
+        self.user.save()
         self.client.login(username="apiuser", password="password")
-        response = self.client.get(
-            reverse("accommodation-list")
-        )  # Using router basename
+        response = self.client.get(reverse("accommodation-list"))
         self.assertEqual(response.status_code, 200)
 
     def test_unauthenticated_user_cannot_access_accommodations(self):
+        # Attempt to access accommodations without login
         response = self.client.get(reverse("accommodation-list"))
-        self.assertEqual(response.status_code, 403)  # Update to match the actual response
+        self.assertEqual(response.status_code, 403)  # Expecting a forbidden status
 
+   
+
+    def test_admin_can_see_all_accommodations(self):
+        # Log in as an admin user
+        admin_user = User.objects.create_user(username="adminuser", password="password")
+        admin_user.is_superuser = True
+        admin_user.is_staff = True
+        admin_user.save()
+        self.client.login(username="adminuser", password="password")
+
+        # Admin should be able to see all accommodations
+        response = self.client.get(reverse("accommodation-list"))
+        self.assertContains(response, "Test Accommodation")
+        self.assertContains(response, "Other Accommodation")
 
 
 class LocalizationTest(TestCase):

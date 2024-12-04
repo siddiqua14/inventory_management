@@ -1,6 +1,6 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
+from rest_framework import viewsets
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import Group, User
 from django.views.generic import TemplateView  # Import TemplateView
@@ -31,6 +31,8 @@ class AccommodationAPI(ModelViewSet):
                 detail="Authentication credentials were not provided."
             )
         super().permission_denied(request, message=message, code=code)
+
+
 
 
 class SignupRequestView(TemplateView):

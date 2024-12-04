@@ -1,4 +1,4 @@
-docker-compose down -v
+docker-compose down -v   ----volume down 
 then build
 then 
 pip install django
@@ -16,7 +16,13 @@ docker exec -it djangoproject-web-1 python manage.py createsuperuser
     admin@gmail.com
     123
 
+
 python manage.py test
 coverage run manage.py test
 coverage report
 coverage html
+
+
+python manage.py add_location
+python manage.py create_groups
+python manage.py generate_sitemap

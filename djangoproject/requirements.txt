@@ -14,3 +14,4 @@ pytz
 sqlparse
 typing_extensions
 tzdata
+django-import-export

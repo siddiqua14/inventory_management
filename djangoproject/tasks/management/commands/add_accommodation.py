@@ -7,23 +7,20 @@ class Command(BaseCommand):
     help = 'Add accommodation entries to the database'
 
     def handle(self, *args, **kwargs):
-        # Retrieve or create test data for Location model
-        try:
-            india = Location.objects.get(id="IN")
-        except Location.DoesNotExist:
-            self.stdout.write(self.style.ERROR('Location with id "IN" does not exist'))
+        # Retrieve or create test data for Location model by country code
+        india = Location.objects.filter(country_code="IN").first()
+        if not india:
+            self.stdout.write(self.style.ERROR('Location with country code "IN" does not exist'))
             return
         
-        try:
-            us = Location.objects.get(id="US")
-        except Location.DoesNotExist:
-            self.stdout.write(self.style.ERROR('Location with id "US" does not exist'))
+        us = Location.objects.filter(country_code="US").first()
+        if not us:
+            self.stdout.write(self.style.ERROR('Location with country code "US" does not exist'))
             return
         
-        try:
-            france = Location.objects.get(id="FR")
-        except Location.DoesNotExist:
-            self.stdout.write(self.style.ERROR('Location with id "FR" does not exist'))
+        france = Location.objects.filter(country_code="FR").first()
+        if not france:
+            self.stdout.write(self.style.ERROR('Location with country code "FR" does not exist'))
             return
         
         # Retrieve a test user or create one if it doesn't exist
@@ -40,9 +37,9 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.WARNING(f'Accommodation with id {accommodation_id} already exists'))
 
-        # Add accommodations
+        # Add accommodations with country code as id
         create_accommodation(
-            "IN_MUM_001",
+            "IN_MUM_001",  # Accommodation ID based on country code
             feed=1,
             title="Cozy Apartment in Mumbai",
             country_code="IN",
@@ -50,7 +47,7 @@ class Command(BaseCommand):
             review_score=4.5,
             usd_rate=100.00,
             center=Point(72.8777, 19.0760),
-            location=india,
+            location=india,  # Location retrieved by country code
             images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["WiFi", "Air Conditioning", "Hot Water"],
             user=user,
@@ -58,7 +55,7 @@ class Command(BaseCommand):
         )
 
         create_accommodation(
-            "US_LA_001",
+            "US_LA_001",  # Accommodation ID based on country code
             feed=1,
             title="Luxury Condo in Los Angeles",
             country_code="US",
@@ -66,7 +63,7 @@ class Command(BaseCommand):
             review_score=4.8,
             usd_rate=250.00,
             center=Point(-118.2437, 34.0522),
-            location=us,
+            location=us,  # Location retrieved by country code
             images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["Pool", "Gym", "Parking"],
             user=user,
@@ -74,7 +71,7 @@ class Command(BaseCommand):
         )
 
         create_accommodation(
-            "US_NYC_001",
+            "US_NYC_001",  # Accommodation ID based on country code
             feed=1,
             title="Modern Apartment in New York City",
             country_code="US",
@@ -82,7 +79,7 @@ class Command(BaseCommand):
             review_score=4.7,
             usd_rate=300.00,
             center=Point(-74.0060, 40.7128),
-            location=us,
+            location=us,  # Location retrieved by country code
             images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["WiFi", "Heating", "Washer"],
             user=user,
@@ -90,7 +87,7 @@ class Command(BaseCommand):
         )
 
         create_accommodation(
-            "FR_PAR_001",
+            "FR_PAR_001",  # Accommodation ID based on country code
             feed=1,
             title="Charming Studio in Paris",
             country_code="FR",
@@ -98,7 +95,7 @@ class Command(BaseCommand):
             review_score=4.9,
             usd_rate=150.00,
             center=Point(2.3522, 48.8566),
-            location=france,
+            location=france,  # Location retrieved by country code
             images=["https://example.com/hotel1.jpg", "https://example.com/hotel2.jpg"],
             amenities=["WiFi", "Elevator", "Balcony"],
             user=user,

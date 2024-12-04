@@ -1,0 +1,8 @@
+id,title,location_type,country_code,state_abbr,city,center
+11,India,country,IN,,,POINT(78.9629 20.5937)
+12,Maharashtra,state,IN,MH,,POINT(72.9787 19.2183)
+13,Mumbai,city,IN,MH,Mumbai,POINT(72.8777 19.0760)
+14,Bangladesh,country,BD,,,POINT(90.3563 23.6850)
+15,Dhaka,city,BD,,Dhaka,POINT(90.4125 23.8103)
+16,Japan,country,JP,,,POINT(138.2529 36.2048)
+17,Tokyo,city,JP,,Tokyo,POINT(139.6917 35.6895)

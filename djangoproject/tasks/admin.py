@@ -3,9 +3,40 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.admin import UserAdmin
 from .models import Location, Accommodation, LocalizeAccommodation
 from leaflet.admin import LeafletGeoAdmin
+from import_export.admin import ExportMixin, ImportExportMixin
+from import_export import resources
+from django.contrib.gis.geos import Point
 
+
+# Define the resource for the Location model
+class LocationResource(resources.ModelResource):
+    class Meta:
+        model = Location
+        fields = (
+            "id",
+            "title",
+            "location_type",
+            "country_code",
+            "state_abbr",
+            "city",
+            "center",
+        )
+
+    def before_import_row(self, row, **kwargs):
+        if "center" in row and row["center"]:
+            try:
+                lng, lat = map(
+                    float, row["center"].replace("POINT(", "").replace(")", "").split()
+                )
+                row["center"] = Point(lng, lat, srid=4326)
+            except ValueError as e:
+                row["center"] = None
+
+
+# Add ImportExportMixin to enable import/export functionality
 @admin.register(Location)
-class LocationAdmin(LeafletGeoAdmin):
+class LocationAdmin(ImportExportMixin, LeafletGeoAdmin):
+    resource_class = LocationResource
     list_display = (
         "id",
         "title",
@@ -13,17 +44,19 @@ class LocationAdmin(LeafletGeoAdmin):
         "country_code",
         "state_abbr",
         "city",
+        "created_at",
+        "updated_at",
     )
     list_filter = ("location_type", "country_code")
     search_fields = ("title", "city", "state_abbr", "country_code")
-
-    # Leaflet map customization options
-    default_zoom = 12  # Set the default zoom level for the map
+    default_zoom = 12
     map_options = {
-        'scrollWheelZoom': False,  # Disable scroll wheel zoom for better UI
-        'center': [0, 0],  # You can set a default center (lat, long), for example [0, 0]
-        'zoom': 12,  # Set the initial zoom level for the map
+        "scrollWheelZoom": False,
+        "center": [0, 0],
+        "zoom": 12,
     }
+    ordering = ('id',) 
+
 
 @admin.register(Accommodation)
 class AccommodationAdmin(LeafletGeoAdmin):
@@ -46,26 +79,23 @@ class AccommodationAdmin(LeafletGeoAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        if (
-            request.user.groups.filter(name="Property Owners").exists()
-            and request.user.is_active
-        ):
+        if request.user.groups.filter(name="Property Owners").exists():
             return queryset.filter(user=request.user)  # Filter for Property Owners
-        return queryset  # Return all accommodations for admin users
+        return queryset # Return all accommodations for admin users
 
     # Leaflet map customization options
     default_zoom = 12
     map_options = {
-        'scrollWheelZoom': False,
-        'center': [0, 0],
-        'zoom': 12,
+        "scrollWheelZoom": False,
+        "center": [0, 0],
+        "zoom": 12,
     }
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         if not request.user.is_superuser:
-            form.base_fields['user'].widget.attrs['disabled'] = 'disabled'
-            form.base_fields['user'].required = False
+            form.base_fields["user"].widget.attrs["disabled"] = "disabled"
+            form.base_fields["user"].required = False
         return form
 
     def save_model(self, request, obj, form, change):
@@ -85,25 +115,3 @@ class LocalizeAccommodationAdmin(admin.ModelAdmin):
     list_filter = ("language",)
 
 
-# Add Property Owners Group in Admin Interface
-class CustomUserAdmin(UserAdmin):
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-
-        if not change:  # If creating a new user
-            group, _ = Group.objects.get_or_create(name="Property Owners")
-            obj.groups.add(group)
-            obj.is_active = (
-                False  # Initially, set the user as inactive until admin approval
-            )
-        else:
-            # If the user is approved (is_active = True), they can access their accommodations
-            if obj.is_active:
-                group, _ = Group.objects.get_or_create(name="Property Owners")
-                obj.groups.add(group)
-
-        obj.save()  # Save the user model changes
-
-
-admin.site.unregister(User)
-admin.site.register(User, CustomUserAdmin)

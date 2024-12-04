@@ -43,10 +43,10 @@ INSTALLED_APPS = [
     "tasks",
 
     # third-party apps
-    "rest_framework",
+    'rest_framework',
     'django.contrib.gis',
     'leaflet',
-
+    'import_export',
 ]
 
 MIDDLEWARE = [
