@@ -30,18 +30,18 @@ Before getting started, make sure you have the following tools and technologies 
 
 First, clone the project repository to your local machine:
 
-    ```bash
-    git clone https://github.com/siddiqua14/inventory_management.git
-    cd inventory-management
-    ```
+```bash
+git clone https://github.com/siddiqua14/inventory_management.git
+cd inventory-management
+```
 ### 2. Create a Virtual Environment (Optional)
 You can create a virtual environment to isolate project dependencies:
 
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
-    cd djangoproject
-    ```
+```bash
+python -m venv .venv
+source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
+cd djangoproject
+```
 ### 3. Install Dependencies
 
 Install the necessary dependencies listed in `requirements.txt` by running the following command:
@@ -50,12 +50,80 @@ pip install -r requirements.txt
 ```
 ### 4. Set up Docker
 
-Docker will be used to set up the development environment, including PostgreSQL and PostGIS.
 
-The project includes a `docker-compose.yml` file to build and run the containers.
+The project includes a **Dockerfile** and **docker-compose.yml** for containerizing the application.
+
+#### Dockerfile:
+- Defines the environment for the Django application, including dependencies.
+
+#### docker-compose.yml:
+- Defines the services (web, db) and manages the connection between the application and the PostgreSQL database.
 
 To set up the Docker containers, run the following command:
 
 ```bash
 docker-compose up --build
+```
+### Apply Database Migrations
+
+To set up the database and populate it with initial data, follow these steps:
+
+1. Open a bash shell in the Django container:
+```bash
+docker exec -it djangoproject-web-1 bash
+```
+2. Apply database migrations:
+
+```bash
+python manage.py migrate
+```
+3. Populate the database with initial data by running the following management commands:
+```bash
+python manage.py add_location
+python manage.py add_accommodation
+python manage.py add_localize_accommodation
+``` 
+### Create a Superuser
+
+To access the Django Admin interface, you need to create a superuser. Run the following command:
+
+```bash
+docker exec -it djangoproject-web-1 python manage.py createsuperuser
+```
+Once created, you can log in to the Django Admin interface at http://localhost:8000/admin/
+
+### User Groups and Permissions
+
+#### Property Owners Group
+
+- A **"Property Owners"** user group has been established to restrict access to accommodations.  
+- Property owners can:
+  - View, create, and update their own accommodations.  
+  - They **cannot** access accommodations owned by other users.  
+```bash
+docker exec -it djangoproject-web-1 python manage.py create_groups
+```
+#### Superuser Access
+- The **superuser account** created earlier has full access to all features and data in the Django Admin interface.
+
+### Sitemap Generation
+
+#### Generate the `sitemap.json` File
+To generate the `sitemap.json` file containing a list of all location URLs, run the following command:  
+```bash
+docker exec -it djangoproject-web-1 python manage.py generate_sitemap
+```
+### Unit Testing
+
+Unit tests are provided to ensure that the code functions as expected and to maintain stability. Tests are written using Django's testing framework.
+
+#### To run tests:
+```bash
+docker exec -it djangoproject-web-1 python manage.py test
+```
+#### Code Coverage:
+The project aims to maintain a code coverage of at least 70%.
+```bash
+docker exec -it djangoproject-web-1 coverage run manage.py test
+docker exec -it djangoproject-web-1 coverage report
 ```

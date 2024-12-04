@@ -102,5 +102,22 @@ class Command(BaseCommand):
         )
         los_angeles.parent = california  # Explicitly set the parent
         los_angeles.save()
+        # Add Country: France
+        france, created = Location.objects.get_or_create(
+            id=7,
+            defaults={
+                'title': "France",
+                'center': Point(2.2137, 46.2276),  # Longitude, Latitude for France
+                'location_type': "country",
+                'country_code': "FR"
+            }
+        )
+        if not created:
+            france.title = "France"
+            france.center = Point(2.2137, 46.2276)
+            france.location_type = "country"
+            france.country_code = "FR"
+            france.save()
+
 
         self.stdout.write(self.style.SUCCESS('All locations have been added/updated successfully.'))

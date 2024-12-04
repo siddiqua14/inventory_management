@@ -1,3 +1,8 @@
+facing problem in installing django dependencies specially in psyco2-binary
+   pip install django djangorestframework
+ 
+
+
 docker-compose down -v   ----volume down 
 then build
 then 
@@ -24,5 +29,10 @@ coverage html
 
 
 python manage.py add_location
+python manage.py add_accommodation
+python manage.py add_localize_accommodation
 python manage.py create_groups
 python manage.py generate_sitemap
+
+
+for windows url/:http://localhost:8000/
