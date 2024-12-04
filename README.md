@@ -45,7 +45,17 @@ You can create a virtual environment to isolate project dependencies:
 ### 3. Install Dependencies
 
 Install the necessary dependencies listed in `requirements.txt` by running the following command:
+```bash
+pip install -r requirements.txt
+```
+### 4. Set up Docker
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+Docker will be used to set up the development environment, including PostgreSQL and PostGIS.
+
+The project includes a `docker-compose.yml` file to build and run the containers.
+
+To set up the Docker containers, run the following command:
+
+```bash
+docker-compose up --build
+```
