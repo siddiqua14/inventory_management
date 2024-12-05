@@ -115,14 +115,16 @@ To create the required user groups, run the following command:
 docker exec -it djangoproject-web-1 python manage.py create_groups
 ```
 #### User Registration and Admin Permissions
-
-When a user signs up through the registration page at http://localhost:8000, their account will be **inactive** by default. An admin must grant permissions for the user to access the "Property Owners" group.
+When a user signs up through the registration page at http://localhost:8000, 
+![image](https://github.com/user-attachments/assets/015bb0a1-f66d-45bd-af5b-fcccafbbd872)
+their account will be **inactive** by default. An admin must grant the user permission to access the "Property Owners" group.
 
 #### Steps for Admin:
 1. **Activate the User Account**:
    - Go to the Django Admin interface at http://localhost:8000/admin.
    - Navigate to the **Users** section.
    - Select the newly registered user and check the **Active** checkbox to activate the account.
+![image](https://github.com/user-attachments/assets/015b64bb-0661-4105-9459-407e5a8ef0a1)
 
 2. **Assign Staff Status**:
    - If the user requires access to the Django Admin interface, check the **Staff status** checkbox.
