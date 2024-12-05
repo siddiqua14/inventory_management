@@ -160,3 +160,30 @@ The project aims to maintain a code coverage of at least 70%.
 docker exec -it djangoproject-web-1 coverage run manage.py test
 docker exec -it djangoproject-web-1 coverage report
 ```
+### Sitemap Generation for Country Locations
+
+This project includes a script to generate a `sitemap.json` file that contains country location data. The file includes information such as the country name, code, latitude, and longitude.
+Run the following command in your terminal to generate the `sitemap.json` file:
+```bash
+docker exec -it djangoproject-web-1 python generate_sitemap.py
+```
+```bash
+{
+    "title": "United States",
+    "slug": "united-states",
+    "locations": [
+      {
+        "title": "California",
+        "slug": "california",
+        "url": "us/california",
+        "locations": [
+          {
+            "title": "Los Angeles",
+            "slug": "los-angeles",
+            "url": "us/california/los-angeles"
+          }
+        ]
+      }
+    ]
+  }
+```
