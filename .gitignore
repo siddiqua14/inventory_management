@@ -1,2 +1,4 @@
 .venv
 htmlcov\
+.coverage
+sitemap.json
