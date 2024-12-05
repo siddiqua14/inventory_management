@@ -8,7 +8,7 @@ then build
 then 
 pip install django
 pip install djangorestframework
-
+pip install leafle
 docker exec -it djangoproject-web-1 bash
 Ensure you've run Django migrations:
 
